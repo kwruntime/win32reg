@@ -12,9 +12,9 @@ In all Windows, .NET Framework is installed by default, so this library should w
 ## Getting started. 
 
 ```typescript
-import {Registry} from "@kwruntime/typdotnet"
+import {Registry} from "@kwruntime/win32reg"
 // or 
-const {Registry} = require("@kwruntime/typdotnet")
+const {Registry} = require("@kwruntime/win32reg")
 
 
 async function main(){
