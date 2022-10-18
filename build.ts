@@ -50,8 +50,7 @@ export class Program{
 
 
         let builder = new Builder({
-            target: 'node',
-            externalModules: ["gitlab://jamesxt94/packages@main/com.kodhe.typedotnet/0.1.7.kwb"]
+            target: 'node'
         })
 
 
@@ -59,7 +58,7 @@ export class Program{
         const {Batch, Dotnet} = require(x)`
 
         let content = await fs.promises.readFile(Path.join(root, "mod.ts"), "utf8")
-        await fs.promises.writeFile(Path.join(root, "mod_1.ts"), content.replace('import {Batch, Dotnet} from "gitlab://jamesxt94/packages@main/com.kodhe.typedotnet/0.1.7.kwb"', rep))
+        await fs.promises.writeFile(Path.join(root, "mod_1.ts"), content.replace(/import\s+\{Batch\,\s+Dotnet\}\s+from\s+\"gitlab\:\/\/jamesxt94\/packages\@main\/com\.kodhe\.typedotnet\/.*\.kwb\"/, rep))
         
         await builder.compile(Path.join(root, "mod_1.ts"))
         await fs.promises.rm(Path.join(root, "mod_1.ts"))

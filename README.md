@@ -4,6 +4,9 @@ Utility for read/write Windows registry. Of course, can work on x86/x64 machines
 
 NO NATIVE DEPENDENCIES.
 
+
+
+
 ## How works?
 
 Works using [@kwruntime/typedotnet](https://github.com/kwruntime/typedotnet), a library for interact with .NET Framework and .NET 6
@@ -12,6 +15,10 @@ In all Windows, .NET Framework is installed by default, so this library should w
 
 
 ## Getting started. 
+
+
+> NOTE: version 0.1.1 was broken. Doesn't use
+
 
 ```typescript
 import {registry} from "@kwruntime/win32reg"
