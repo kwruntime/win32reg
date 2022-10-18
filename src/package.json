@@ -1,6 +1,6 @@
 {
     "name": "@kwruntime/win32reg",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "main": "./main.js",
     "types": "./types/mod.d.ts",
     "description": "Utility for read/write Windows registry",
@@ -14,7 +14,7 @@
         "regedit"
     ],
     "dependencies": {
-        "@kwruntime/typedotnet": "^0.x"
+        "@kwruntime/typedotnet": "^0.1.9"
     },
     "repository": {
         "type": "git",

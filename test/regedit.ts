@@ -1,21 +1,22 @@
-import {registry} from '../src/mod'
+import regedit from "npm://regedit@5.0.0"
 
 
 export class Program{
     static async main(){
 
- 
+        
         let time = Date.now() 
 
-        await registry.createKeys([
+        await regedit.promisified.createKey([
             `HKCU\\SOFTWARE\\Classes\\Test1`,
             `HKCU\\SOFTWARE\\Classes\\Test1\\DefaultIcon`
         ])
+		
 
-        await registry.putValues({
+        await regedit.promisified.putValue({
             "HKCU\\SOFTWARE\\Classes\\Test1\\DefaultIcon":{
-                "": {
-                    type: "REG_SZ",
+                "default": {
+                    type: "REG_DEFAULT",
                     value: "Valor 1"
                 },
                 "Name": {
@@ -32,13 +33,11 @@ export class Program{
                 }
             }
         })
-
-        let res = await registry.list("HKCU\\SOFTWARE\\Classes\\Test1\\DefaultIcon")
+	
+        let res = await regedit.promisified.list("HKCU\\SOFTWARE\\Classes\\Test1\\DefaultIcon")
         
         console.info("Operation time.", Date.now() - time)
-        console.info("Result:", res)
-
-
-        registry.close()
+		console.info("Result:", res)
+		
     }
 }

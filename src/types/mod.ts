@@ -1,4 +1,4 @@
-import { Batch, Dotnet } from "@kwruntime/typedotnet";
+import { Batch, Dotnet } from "gitlab://jamesxt94/packages@main/com.kodhe.typedotnet/0.1.9.kwb";
 export interface RegKeyValue {
     name?: string;
     type: 'REG_SZ' | 'REG_BINARY' | 'REG_DWORD' | 'REG_EXPAND_SZ' | 'REG_MULTI_SZ' | 'REG_QWORD' | 'Unknown';
@@ -82,6 +82,7 @@ export declare class Registry {
         HKUS: string;
         HKCC: string;
     };
+    static registry: Registry;
     $dotnet: Dotnet;
     $regs: {
         CurrentUser: any;
@@ -98,7 +99,7 @@ export declare class Registry {
     /**
     * Start library. Execute this method before all operations with win32 registry
     */
-    start(): Promise<void>;
+    start(runtimeFilter?: any): Promise<void>;
     /**
     * Execute this method after all operations finished
     */
@@ -151,3 +152,4 @@ export declare class Registry {
         [key: string]: RegKeyValues;
     }): Promise<void>;
 }
+export declare var registry: Registry;

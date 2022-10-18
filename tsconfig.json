@@ -1,0 +1,26 @@
+ 
+{
+	"compilerOptions": {
+		"resolveJsonModule": true,
+		"moduleResolution": "node",
+		"module": "es2020",
+		"target": "esnext",
+		"outDir": "out",
+		"lib": [
+			"es6",
+			"dom"
+		],
+		"esModuleInterop": true,
+		"sourceMap": true,
+		"paths": {
+			"*.ts": ["*"],
+			"*.kwb": ["*.kwb.js"]
+		},
+		"plugins": [{ "enableForWorkspaceTypeScriptVersions": true, "name": "kawix-runtime-plugin" }]
+	},
+	"exclude": [
+		"node_modules",
+		".vscode-test"
+	]
+}
+

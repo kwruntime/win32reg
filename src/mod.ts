@@ -1,5 +1,5 @@
 import Exception from 'gh+/kwruntime/std@1.1.19/util/exception.ts'
-import {Batch, Dotnet} from "gitlab://jamesxt94/packages@main/com.kodhe.typedotnet/0.1.7.kwb"
+import {Batch, Dotnet} from "gitlab://jamesxt94/packages@main/com.kodhe.typedotnet/0.1.9.kwb"
 
 const KindToType = {
     "String": "REG_SZ",
@@ -59,6 +59,7 @@ export class RegItem{
      * @returns false or true
      */
     async exists(){
+
         let batch = this.batch
         let okeys = await this.$reg.$OpenKeys(batch, [this.root + "\\" + this.name], false)
         let ok =  !(await batch.wait(batch.utils.IsNull(okeys[0].subkey)))
@@ -214,6 +215,7 @@ export class Registry {
         "HKUS": "HKEY_USERS",
         "HKCC": "HKEY_CURRENT_CONFIG"
     }
+    static registry = new Registry()
 
     $dotnet : Dotnet 
 
@@ -251,23 +253,47 @@ export class Registry {
      /**
      * Start library. Execute this method before all operations with win32 registry
      */
-    async start(){
+    async start(runtimeFilter?: any){
 
-        this.$dotnet = new Dotnet()
-        let runtimes = await Dotnet.availableRuntimes()
-        let runtime = runtimes.filter((a) => a.platform == "netcore")[0]
-        if(!runtime || runtime.platform != "win32"){
-            runtime = runtimes.filter((a) => a.platform == "netframework")[0]
+        if(!runtimeFilter){
+            this.$dotnet = Dotnet.getWithId("com.kodhe.utils")
         }
-        await this.$dotnet.start((a) =>  a.platform  == runtime.platform && a.version == runtime.version)
-
-        if(runtime.platform == "netcore"){
-            // netcore requires load assembly, netframework not
-            let batch = this.$dotnet.batch()
-            batch.kodnet.$LoadAssembly("Microsoft.Win32.Registry, Culture=neutral")
-            await batch.finish()
+        else{
+            this.$dotnet = new Dotnet()
         }
-
+        
+        if(!this.$dotnet.innerProcess){
+            // if process started 
+            let runtime = null
+            let runtimes = await Dotnet.availableRuntimes()		
+            if(!runtimeFilter){			
+                runtime = runtimes.filter((a) => a.platform == "netcore")[0]
+                if(!runtime || (runtime.os != "win32")){
+                    runtime = runtimes.filter((a) => a.platform == "netframework")[0]
+                }
+            }
+            else{
+                if(typeof runtimeFilter == "function"){	
+                        runtime = runtimes.filter(runtimeFilter)[0]
+                }
+                else{
+                    runtime = runtimes.filter((a) => a.platform == runtimeFilter)[0]
+                }
+            }        
+            await this.$dotnet.start((a) =>  a.platform  == runtime.platform && a.version == runtime.version)
+        }
+		
+        let loaded = this.$dotnet.innerProcess["$_assemblies"] = this.$dotnet.innerProcess["$_assemblies"] || []
+		if(this.$dotnet.runtimeInfo.platform == "netcore"){
+            if(loaded.indexOf("Microsoft.Win32.Registry") < 0){
+                // netcore requires load assembly, netframework not
+                let batch = this.$dotnet.batch()
+                batch.kodnet.$LoadAssembly("Microsoft.Win32.Registry, Culture=neutral")
+                await batch.finish()
+                loaded.push("Microsoft.Win32.Registry")
+            }
+        }
+        this.$dotnet.innerProcess.on("exit", () => this.$dotnet = null)
 
 
         this.$regs.CurrentUser = new RegItem(this, "HKCU", "")
@@ -370,7 +396,7 @@ export class Registry {
     async createKeys(keys: Array<string>){
 
         if(!keys.length) return
-
+        if(!this.$dotnet) await this.start()
 
         let batch = this.$dotnet.batch()
         let okeys = await this.$OpenKeys(batch, keys, false)
@@ -411,6 +437,7 @@ export class Registry {
     async deleteKeys(keys: Array<string>){
 
         if(!keys.length) return
+        if(!this.$dotnet) await this.start()
         
         let batch = this.$dotnet.batch()
         try{
@@ -436,6 +463,7 @@ export class Registry {
 
         
         if(!keys.length) return
+        if(!this.$dotnet) await this.start()
 
         
         let batch = this.$dotnet.batch()
@@ -521,6 +549,7 @@ export class Registry {
 
         let values = Object.values(keys)
         if(values.length < 1) return 
+        if(!this.$dotnet) await this.start()
 
         let ckeys = Object.keys(keys)
         let batch = this.$dotnet.batch()
@@ -562,6 +591,7 @@ export class Registry {
 
         let values = Object.values(keys)
         if(values.length < 1) return 
+        if(!this.$dotnet) await this.start()
 
         let ckeys = Object.keys(keys)
         let batch = this.$dotnet.batch()
@@ -618,3 +648,5 @@ export class Registry {
     }
 
 }
+
+export var registry = Registry.registry
