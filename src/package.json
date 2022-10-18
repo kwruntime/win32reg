@@ -1,0 +1,24 @@
+{
+    "name": "@kwruntime/win32reg",
+    "version": "0.1.0",
+    "main": "./main.js",
+    "types": "./types/mod.d.ts",
+    "description": "Utility for read/write Windows registry",
+    "keywords": [
+        "win32reg",
+        "winreg",
+        "registry",
+        "win32",
+        "win32registry",
+        "winregistry",
+        "regedit"
+    ],
+    "dependencies": {
+        "@kwruntime/typedotnet": "^0.x"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/kwruntime/win32reg"
+    },
+    "author": "James (developer@kodhe.com)"
+}
