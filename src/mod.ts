@@ -59,7 +59,6 @@ export class RegItem{
      * @returns false or true
      */
     async exists(){
-
         let batch = this.batch
         let okeys = await this.$reg.$OpenKeys(batch, [this.root + "\\" + this.name], false)
         let ok =  !(await batch.wait(batch.utils.IsNull(okeys[0].subkey)))
@@ -294,6 +293,7 @@ export class Registry {
             }
         }
         this.$dotnet.innerProcess.on("exit", () => this.$dotnet = null)
+
 
 
         this.$regs.CurrentUser = new RegItem(this, "HKCU", "")

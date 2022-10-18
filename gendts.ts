@@ -53,9 +53,9 @@ export class Program {
             let tsname = name.replace(".d.ts", ".ts")
             let outfile = Path.join(__dirname, "src", "types", tsname)
             let content = files[id]
-            for(let name of names){
-                content = content.replace("gitlab://jamesxt94/packages@main/com.kodhe.typedotnet/0.1.7.kwb", "@kwruntime/typedotnet")   
-            }
+            
+            content = content.replace(/gitlab\:\/\/jamesxt94\/packages\@main\/com\.kodhe\.typedotnet\/.*\.kwb/, "@kwruntime/typedotnet")   
+            
             await fs.promises.writeFile(outfile, content)
         }
 
